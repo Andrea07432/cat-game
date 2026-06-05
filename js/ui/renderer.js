@@ -181,6 +181,28 @@ export class Renderer {
     this.catElements.delete(catId);
   }
 
+  showReconciliationBubble(catId, reconciled) {
+    const el = this.catElements.get(catId);
+    if (!el) return;
+
+    this._stopAngryBubbleRotation({ id: catId });
+    const existing = el.querySelector('.behavior-bubble');
+    if (existing) existing.remove();
+
+    const bubble = document.createElement('div');
+    bubble.className = 'behavior-bubble reconciliation-bubble';
+    bubble.dataset.behavior = 'reconciliation';
+    bubble.innerHTML = `<span class="bubble-emoji">${reconciled.emoji}</span><span class="bubble-text">${reconciled.text}</span>`;
+    el.appendChild(bubble);
+
+    setTimeout(() => {
+      if (bubble.parentElement) {
+        bubble.classList.add('bubble-fadeout');
+        setTimeout(() => { if (bubble.parentElement) bubble.remove(); }, 400);
+      }
+    }, 4000);
+  }
+
   showReaction(catId, emoji) {
     const el = this.catElements.get(catId);
     if (!el) return;

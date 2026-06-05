@@ -508,6 +508,31 @@
   font-weight: bold;
 }
 
+.reconciliation-bubble {
+  background: #f0fff0;
+  border: 1.5px solid #6bcf7f;
+  animation: bubbleIn 0.3s ease-out, reconcileBounce 1s ease-in-out 0.3s;
+  max-width: 160px;
+}
+
+.reconciliation-bubble::after {
+  border-top-color: #f0fff0;
+}
+
+.reconciliation-bubble .bubble-emoji {
+  font-size: 16px;
+}
+
+.reconciliation-bubble .bubble-text {
+  color: #2d8f4e;
+  font-weight: bold;
+}
+
+@keyframes reconcileBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
 @keyframes angryBounce {
   0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
   25% { transform: translateX(-50%) translateY(-3px) rotate(-2deg); }

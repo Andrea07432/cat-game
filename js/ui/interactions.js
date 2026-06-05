@@ -106,8 +106,12 @@ export class Interactions {
   doFeed(cat) {
     const result = cat.feed(Date.now());
     if (result.success) {
-      this.renderer.showReaction(cat.id, '🍖');
-      this.hud.notify(`${cat.name} 吃得很开心！`);
+      if (result.reconciled) {
+        this.showReconciliation(cat, result.reconciled);
+      } else {
+        this.renderer.showReaction(cat.id, '🍖');
+        this.hud.notify(`${cat.name} 吃得很开心！`);
+      }
       this.afterAction(cat);
     } else if (result.reason === 'cooldown') {
       this.hud.notify('刚喂过，等一会儿再喂吧~');
@@ -125,7 +129,12 @@ export class Interactions {
     } else if (result.reason === 'cooldown') {
       this.hud.notify('刚摸过啦，给它点空间~');
     } else if (result.reason === 'angry') {
-      this.hud.notify(`${cat.name} 对你呲牙，现在不想被摸！`);
+      if (result.reconciled) {
+        this.showReconciliation(cat, result.reconciled);
+      } else {
+        this.hud.notify(`${cat.name} 对你呲牙，但似乎没那么生气了...`);
+      }
+      this.afterAction(cat);
     }
   }
 
@@ -138,7 +147,12 @@ export class Interactions {
     } else if (result.reason === 'cooldown') {
       this.hud.notify('它有点累了，休息一下~');
     } else if (result.reason === 'angry') {
-      this.hud.notify(`${cat.name} 不想理你...`);
+      if (result.reconciled) {
+        this.showReconciliation(cat, result.reconciled);
+      } else {
+        this.hud.notify(`${cat.name} 哼了一声，但尾巴没有那么炸了...`);
+      }
+      this.afterAction(cat);
     }
   }
 
@@ -215,6 +229,11 @@ export class Interactions {
     if (hint.textContent) {
       this.actionButtonsEl.appendChild(hint);
     }
+  }
+
+  showReconciliation(cat, reconciled) {
+    this.renderer.showReconciliationBubble(cat.id, reconciled);
+    this.hud.notify(reconciled.text);
   }
 
   afterAction(cat) {

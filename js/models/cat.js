@@ -124,6 +124,27 @@ export class Cat {
     return [0.2, 0.2, 0.2, 0.2, 0.2];
   }
 
+  checkReconciliation() {
+    if (this.status !== 'angry') return null;
+    if (this.mood < 0.6) return null;
+
+    this.status = 'home';
+    this.animation = 'idle';
+    this.angryStartedAt = null;
+    return this.getReconciliationMessage();
+  }
+
+  getReconciliationMessage() {
+    const messages = {
+      clingy: { emoji: '🥰', text: `${this.name}主动蹭了蹭你，不生你的气啦~` },
+      aloof: { emoji: '😏', text: `${this.name}慢慢走过来坐在你旁边，算是原谅你了。` },
+      gluttonous: { emoji: '🍖', text: `${this.name}叼着零食过来找你，用吃的表示和解~` },
+      playful: { emoji: '🧸', text: `${this.name}叼着玩具过来蹭你，想跟你玩了！` },
+      timid: { emoji: '🐾', text: `${this.name}小心翼翼地靠过来，轻轻碰了碰你的手...` }
+    };
+    return messages[this.personality] || { emoji: '💕', text: `${this.name}不生气了，主动蹭了蹭你~` };
+  }
+
   updateStatus(now) {
     if (this.status === 'stray') return;
 
@@ -136,12 +157,8 @@ export class Cat {
         this.status = 'angry';
         this.animation = 'angry';
       }
-    } else if (!isLow) {
+    } else if (!isLow && this.status !== 'angry') {
       this.angryStartedAt = null;
-      if (this.status === 'angry') {
-        this.status = 'home';
-        this.animation = 'idle';
-      }
     }
 
     return null;
@@ -150,8 +167,19 @@ export class Cat {
   feed(now) {
     const cooldown = this.status === 'stray' ? 10000 : 30000;
     if (now - this.lastFed < cooldown) return { success: false, reason: 'cooldown' };
-    if (this.status === 'angry' && this.personality === 'aloof') {
-      return { success: false, reason: 'angry' };
+
+    if (this.status === 'angry') {
+      if (this.personality === 'aloof') {
+        return { success: false, reason: 'angry' };
+      }
+      this.hunger = Math.min(1, this.hunger + 0.3);
+      this.mood = Math.min(1, this.mood + 0.08);
+      this.lastFed = now;
+      this.animation = 'eating';
+      const reconciled = this.checkReconciliation();
+      const fallbackAnim = reconciled ? 'idle' : 'angry';
+      setTimeout(() => { if (this.animation === 'eating') this.animation = fallbackAnim; }, 3000);
+      return { success: true, animation: 'eating', reconciled };
     }
 
     let hungerGain = 0.3;
@@ -173,7 +201,13 @@ export class Cat {
 
   pet(now) {
     if (now - this.lastPetted < 15000) return { success: false, reason: 'cooldown' };
-    if (this.status === 'angry') return { success: false, reason: 'angry' };
+
+    if (this.status === 'angry') {
+      this.mood = Math.min(1, this.mood + 0.1);
+      this.lastPetted = now;
+      const reconciled = this.checkReconciliation();
+      return { success: false, reason: 'angry', moodIncreased: true, reconciled };
+    }
 
     let moodGain = 0.2;
     let affinityGain = 0.03;
@@ -200,7 +234,13 @@ export class Cat {
 
   play(now) {
     if (now - this.lastPlayed < 45000) return { success: false, reason: 'cooldown' };
-    if (this.status === 'angry') return { success: false, reason: 'angry' };
+
+    if (this.status === 'angry') {
+      this.mood = Math.min(1, this.mood + 0.12);
+      this.lastPlayed = now;
+      const reconciled = this.checkReconciliation();
+      return { success: false, reason: 'angry', moodIncreased: true, reconciled };
+    }
 
     let moodGain = 0.25;
     let affinityGain = 0.04;
