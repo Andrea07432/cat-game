@@ -487,6 +487,38 @@
   100% { opacity: 0; transform: translateX(-50%) scale(0.5) translateY(8px); }
 }
 
+/* Angry bubble */
+.angry-bubble {
+  background: #fff0f0;
+  border: 1.5px solid #ff6b6b;
+  animation: bubbleIn 0.3s ease-out, angryBounce 0.6s ease-in-out 0.3s infinite;
+}
+
+.angry-bubble::after {
+  border-top-color: #fff0f0;
+}
+
+.angry-bubble .bubble-emoji {
+  font-size: 14px;
+  animation: angryPulse 1s ease-in-out infinite;
+}
+
+.angry-bubble .bubble-text {
+  color: #e94560;
+  font-weight: bold;
+}
+
+@keyframes angryBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+  25% { transform: translateX(-50%) translateY(-3px) rotate(-2deg); }
+  75% { transform: translateX(-50%) translateY(-3px) rotate(2deg); }
+}
+
+@keyframes angryPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
 /* Idle bobbing */
 .cat-sprite[data-animation="idle"] .cat-body {
   animation: idleBob 3s ease-in-out infinite;

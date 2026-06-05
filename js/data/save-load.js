@@ -64,7 +64,24 @@ export class SaveLoad {
       state.backyard = deserializeCats(data.cats.backyard);
       state.villa = deserializeCats(data.cats.villa || []);
       state.traveling = deserializeCats(data.cats.traveling);
-      state.fled = deserializeCats(data.cats.fled);
+
+      const fledCats = deserializeCats(data.cats.fled || []);
+      for (const cat of fledCats) {
+        cat.status = 'home';
+        cat.fledAt = null;
+        cat.angryStartedAt = null;
+        cat.animation = 'idle';
+        cat.hunger = Math.max(cat.hunger, 0.5);
+        cat.mood = Math.max(cat.mood, 0.5);
+        cat.health = Math.max(cat.health, 0.5);
+        if (state.home.length < 5) {
+          state.home.push(cat);
+        } else {
+          cat.status = 'villa';
+          state.villa.push(cat);
+        }
+      }
+      state.fled = [];
 
       setNextId(maxId + 1);
 

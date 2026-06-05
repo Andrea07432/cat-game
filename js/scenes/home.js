@@ -9,10 +9,7 @@ export class Home {
     const cats = this.stateManager.getHomeCats();
 
     for (const cat of cats) {
-      const result = cat.tick(now);
-      if (result === 'fled') {
-        this.stateManager.catFled(cat.id);
-      }
+      cat.tick(now);
     }
 
     this.coinTickCounter++;

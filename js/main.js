@@ -39,7 +39,6 @@ function init() {
   hud.updateCoins(stateManager.getState().player.coins);
 
   stateManager.on('cat-fled', (cat) => {
-    hud.notify(`${cat.name} 生气离家出走了...😿`);
     renderer.removeCatElement(cat.id);
     interactions.deselect();
   });

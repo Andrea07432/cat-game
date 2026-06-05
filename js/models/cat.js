@@ -128,7 +128,6 @@ export class Cat {
     if (this.status === 'stray') return;
 
     const isLow = this.hunger < 0.2 || this.mood < 0.2 || this.health < 0.2;
-    const isCritical = this.hunger < 0.1 || this.mood < 0.1 || this.health < 0.1;
 
     if (isLow && this.status !== 'angry') {
       if (!this.angryStartedAt) {
@@ -142,12 +141,6 @@ export class Cat {
       if (this.status === 'angry') {
         this.status = 'home';
         this.animation = 'idle';
-      }
-    }
-
-    if (this.status === 'angry' && isCritical) {
-      if (now - this.angryStartedAt > 600000) {
-        return 'fled';
       }
     }
 
