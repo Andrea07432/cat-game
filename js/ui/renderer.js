@@ -1,3 +1,11 @@
+const BEHAVIOR_BUBBLES = {
+  cuddly: { emoji: '💗', text: '求抱抱~' },
+  rubbing: { emoji: '🐱', text: '蹭蹭你~' },
+  zoomies: { emoji: '⚡', text: '哒哒哒！' },
+  staring: { emoji: '👀', text: '.........' },
+  kneading: { emoji: '🐾', text: '踩踩踩~' }
+};
+
 export class Renderer {
   constructor(stateManager) {
     this.stateManager = stateManager;
@@ -65,7 +73,31 @@ export class Renderer {
       el.dataset.animation = cat.animation;
       el.style.left = `${cat.position.x}px`;
       el.style.top = `${cat.position.y}px`;
+      this.updateBehaviorBubble(cat, el);
     }
+  }
+
+  updateBehaviorBubble(cat, el) {
+    const existing = el.querySelector('.behavior-bubble');
+    const bubbleData = BEHAVIOR_BUBBLES[cat.behaviorState];
+
+    if (!bubbleData) {
+      if (existing && !existing.classList.contains('bubble-fadeout')) {
+        existing.classList.add('bubble-fadeout');
+        setTimeout(() => { if (existing.parentElement) existing.remove(); }, 400);
+      }
+      return;
+    }
+
+    if (existing && existing.dataset.behavior === cat.behaviorState) return;
+
+    if (existing) existing.remove();
+
+    const bubble = document.createElement('div');
+    bubble.className = 'behavior-bubble';
+    bubble.dataset.behavior = cat.behaviorState;
+    bubble.innerHTML = `<span class="bubble-emoji">${bubbleData.emoji}</span><span class="bubble-text">${bubbleData.text}</span>`;
+    el.appendChild(bubble);
   }
 
   selectCat(catId) {
