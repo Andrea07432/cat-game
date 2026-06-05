@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>猫咪后院</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sprites.css">
+</head>
+<body>
+  <div id="game-container">
+    <header id="top-bar">
+      <nav id="scene-tabs">
+        <button class="tab active" data-scene="home">🏠 家</button>
+        <button class="tab" data-scene="backyard">🌿 后院</button>
+        <button class="tab" data-scene="villa">🏡 别墅</button>
+      </nav>
+      <div id="player-info">
+        <span id="coin-display">🪙 <span id="coin-count">0</span></span>
+        <span id="time-display"></span>
+      </div>
+    </header>
+
+    <main id="scene-area">
+      <div id="scene-home" class="scene active"></div>
+      <div id="scene-backyard" class="scene"></div>
+      <div id="scene-villa" class="scene"></div>
+    </main>
+
+    <footer id="bottom-panel">
+      <div id="cat-info" class="hidden">
+        <div id="cat-header">
+          <span id="cat-name"></span>
+          <span id="cat-breed"></span>
+        </div>
+        <div id="stat-bars">
+          <div class="stat-row">
+            <span class="stat-label">🍖 饱食</span>
+            <div class="stat-bar"><div class="stat-fill" id="hunger-bar"></div></div>
+            <span class="stat-value" id="hunger-value">80%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">😊 心情</span>
+            <div class="stat-bar"><div class="stat-fill" id="mood-bar"></div></div>
+            <span class="stat-value" id="mood-value">80%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">💚 健康</span>
+            <div class="stat-bar"><div class="stat-fill" id="health-bar"></div></div>
+            <span class="stat-value" id="health-value">90%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">💕 亲密</span>
+            <div class="stat-bar"><div class="stat-fill" id="affinity-bar"></div></div>
+            <span class="stat-value" id="affinity-value">30%</span>
+          </div>
+        </div>
+        <div id="cat-backstory" class="hidden"></div>
+        <div id="action-buttons"></div>
+      </div>
+      <div id="no-selection">
+        <p>点击一只猫咪来互动</p>
+      </div>
+    </footer>
+
+    <div id="notification-area"></div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
